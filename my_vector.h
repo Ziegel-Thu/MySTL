@@ -26,9 +26,13 @@ private:
 public:
     MyVector() : m_data(nullptr), m_size(0), m_capacity(0) {};
 
+
     explicit MyVector(size_t count, const T& value = T()) : m_size(count), m_capacity(count) {
         m_data = new T[count];
         std::fill_n(m_data, count, value);
+        for (size_t i = 0; i < count; ++i) {
+        std::cout << "m_data[" << i << "] = " << m_data[i] << std::endl;
+        }
     }
 
     MyVector(const MyVector& other) : m_size(other.m_size), m_capacity(other.m_capacity) {
@@ -123,6 +127,7 @@ public:
     }
 
     void clear() override {
+
         m_size = 0;
     }
 

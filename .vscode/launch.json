@@ -2,25 +2,17 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "C++ Launch",
+      "name": "C++ Debug",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/Debug/outDebug",
+      "program": "${workspaceFolder}/main",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],
       "externalConsole": false,
       "MIMode": "lldb",
-      "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        }
-      ],
-      "preLaunchTask": "build",
-      "miDebuggerPath": "/usr/bin/lldb"
+      "preLaunchTask": "build"
     },
     {
       "name": "C/C++ Runner: Debug Session",
@@ -29,6 +21,19 @@
       "args": [],
       "cwd": "/Users/apple/Desktop/Study/CS/C++/MySTL",
       "program": "/Users/apple/Desktop/Study/CS/C++/MySTL/build/Debug/outDebug"
+    },
+    {
+      "name": "C++ Run",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/main",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false, 
+      "MIMode": "lldb",
+      "preLaunchTask": "build"
     }
   ]
 }
