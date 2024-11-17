@@ -5,7 +5,7 @@
 #include "my_vector.h"
 
 //注意这里Container为模版参数，将具体的stack实现定义为MyVector
-template <typename T, typename Container = MyVector<T>>
+template <typename T, typename Container = MyVector<T> >
 class MyStack : public Container {
 public:
     void push(const T& value) {

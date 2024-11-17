@@ -24,7 +24,7 @@ private:
     }
 
 public:
-    MyVector() : m_data(nullptr), m_size(0), m_capacity(0) {}
+    MyVector() : m_data(nullptr), m_size(0), m_capacity(0) {};
 
     explicit MyVector(size_t count, const T& value = T()) : m_size(count), m_capacity(count) {
         m_data = new T[count];
@@ -39,7 +39,7 @@ public:
     MyVector(MyVector&& other) noexcept : m_data(other.m_data), m_size(other.m_size), m_capacity(other.m_capacity) {
         other.m_data = nullptr;
         other.m_size = other.m_capacity = 0;
-    }
+    };
 
     ~MyVector() override {
         delete[] m_data;

@@ -1,7 +1,8 @@
 #include <iostream>
 #include "my_vector.h"
 #include "my_stack.h"
-#include "container.h"
+#include "my_container.h"
+#include "my_deque.h"
 
 void testContainer(Container<int>& container) {
     std::cout << "Testing container:" << std::endl;
@@ -28,12 +29,37 @@ void testContainer(Container<int>& container) {
 int main() {
     MyVector<int> vec;
     MyStack<int> stack;
+    MyDeque<int> deque;
 
     std::cout << "Testing MyVector:" << std::endl;
     testContainer(vec);
 
     std::cout << "\nTesting Stack:" << std::endl;
     testContainer(stack);
+
+    std::cout << "\nTesting MyDeque:" << std::endl;
+    // 测试 MyDeque
+    for (int i = 0; i < 100; ++i) {
+        deque.push_back(i);
+        std::cout << "Deque size after push_back: " << deque.size() << std::endl; 
+    }
+    std::cout << "Deque size after push_back: " << deque.size() << std::endl;
+    std::cout << "Front element: " << deque.front() << std::endl;
+    std::cout << "Back element: " << deque.back() << std::endl;
+
+    for (int i = 0; i < 50; ++i) {
+        deque.pop_front();
+    }
+    std::cout << "Deque size after pop_front: " << deque.size() << std::endl;
+    std::cout << "Front element: " << deque.front() << std::endl;
+
+    for (int i = 0; i < 50; ++i) {
+        deque.pop_back();
+    }
+    std::cout << "Deque size after pop_back: " << deque.size() << std::endl;
+
+    deque.clear();
+    std::cout << "Deque size after clear: " << deque.size() << std::endl;
 
     return 0;
 }
