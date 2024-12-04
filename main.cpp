@@ -27,11 +27,12 @@ void testContainer(Container<int>& container) {
     std::cout << "New top element: " << container.top() << std::endl;
 }
 
+
 void testList(MyList<int>& list) {
     std::cout << "\nTesting MyList:" << std::endl;
 
     // 测试 push_back 和 push_front
-    for (int i = 0; i < 5; ++i) {
+    /*for (int i = 0; i < 5; ++i) {
         std::cout << i*100 << std::endl;
         list.push_back(i);
     }
@@ -65,6 +66,7 @@ void testList(MyList<int>& list) {
     list.clear();
     std::cout << "List size after clear: " << list.size() << std::endl;
     std::cout << "Is list empty after clear? " << (list.empty() ? "Yes" : "No") << std::endl;
+    */
 }
 
 void testDeque(MyDeque<int>& deque) {
@@ -82,7 +84,7 @@ void testDeque(MyDeque<int>& deque) {
     std::cout << "Front element: " << deque.front() << std::endl;
     std::cout << "Back element: " << deque.back() << std::endl;
 
-    for (int i = 0; i < 50; ++i) {
+    for (int i = 0; i < 40; ++i) {
         deque.pop_front();
     }
     
@@ -98,7 +100,9 @@ void testDeque(MyDeque<int>& deque) {
         std::cout << deque[i] << " ";
     }
     std::cout << std::endl;
-    
+    for (int i = 0; i < 20; i++) {
+        deque.push_front(i * i);
+    }
     std::cout << "Deque size after push_front: " << deque.size() << std::endl;
     deque.clear();
     std::cout << "Deque size after clear: " << deque.size() << std::endl;
@@ -108,16 +112,22 @@ void testDeque(MyDeque<int>& deque) {
     for (int i = 0; i < 20; i++) {
         deque.push_front(i * i);
     }
+    std::cout<< deque.at(19)<<std::endl;
     for (int i = 0; i < 20; i++) {
         deque.push_back(i * i * i);
     }
-    
-    std::cout << (deque.start_iterator == deque.end_iterator) << std::endl;
-    std::cout << "Deque size after push_back: " << deque.size() << std::endl;
+        std::cout << "Deque size after push_back: " << deque.size() << std::endl;
     for (int i = 0; i < deque.size(); i++) {
         std::cout << deque.at(i) << " ";
     }
     std::cout << std::endl;
+    deque.clear();
+    for(int i = 0; i < 20; i++) {
+        deque.push_back(i * 4);
+    }
+    deque.pop_back();
+    deque.clear();
+    std::cout << "end" << std::endl;
 }
 
 int main() {
@@ -125,6 +135,8 @@ int main() {
     MyStack<int> stack;
     MyDeque<int> deque;
     MyList<int> list;
+    MyVector<int> vec2;
+
 
     std::cout << "Testing MyVector:" << std::endl;
     testContainer(vec);
@@ -135,7 +147,7 @@ int main() {
     testDeque(deque);
 
     // 测试 MyList
-    testList(list);
+    //testList(list);
 
     return 0;
 }

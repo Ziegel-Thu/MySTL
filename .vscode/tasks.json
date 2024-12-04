@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "build&run",
             "type": "shell",
             "command": "/usr/bin/clang++",
             "args": [
@@ -13,7 +13,8 @@
                 "arm64",
                 "-o",
                 "${workspaceFolder}/main",
-                "${workspaceFolder}/main.cpp"
+                "${workspaceFolder}/main.cpp",
+                "&&${workspaceFolder}/main"
             ],
             "group": "build",
             "problemMatcher": [

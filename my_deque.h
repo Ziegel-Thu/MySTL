@@ -4,17 +4,18 @@
 #include "my_container.h"
 #include "my_vector.h"
 #include <stdexcept>
-
+#include <iostream>
 template <typename T>
 class MyDequeIterator {
 private:
-    T* first;
-    T* last;
-    T* cur;
     T** node;
     size_t m_index;
 
 public:
+    T* first;
+    T* last;
+    T* cur;
+
     MyDequeIterator(T* first, T* last, T* cur, T** node, size_t index)
         : first(first), last(last), cur(cur), node(node), m_index(index) {}
     ~MyDequeIterator() = default;
@@ -23,12 +24,12 @@ public:
     }
 
     MyDequeIterator<T>& operator++() {
-        ++cur;
+        cur++;
         if (cur == last) {
-            if (node != nullptr && *(node + 1) != nullptr) {
-                ++node;
-                cur = *node;
-                last = *node + m_index;
+
+            if (node != nullptr) {
+                if (*node != nullptr) {
+                    ++node;}
             } else {
                 throw std::out_of_range("Iterator out of range");
             }
@@ -44,9 +45,13 @@ public:
 
     MyDequeIterator<T>& operator--() {
         if (cur == first) {
-            --node;
-            cur = *node + m_index - 1;
-            first = *node;
+            if (node != nullptr && *(node) != nullptr) {
+                --node;
+                cur = *node + m_index - 1;
+                first = *node;
+            } else {
+                throw std::out_of_range("Iterator out of range");
+            }
         }
         --cur;
         return *this;
@@ -77,8 +82,6 @@ private:
     size_t m_size;
     size_t m_capacity;
     size_t block_capacity;
-    size_t iterator_count;
-
     MyVector<T*> map;
     T* start;
     T* finish;
@@ -91,26 +94,27 @@ private:
             map[0] = new T[block_capacity];
             start = map[0];
             finish = map[0];
-            start_iterator = MyDequeIterator<T>(start, finish, start, &map[0], block_capacity);
-            end_iterator = MyDequeIterator<T>(start, finish, finish, &map[0], block_capacity);
+            start_iterator = MyDequeIterator<T>(map[0], map[0] + block_capacity, map[0], &map[0], block_capacity);
+            end_iterator = MyDequeIterator<T>(map[0], map[0] + block_capacity, map[0], &map[0], block_capacity);
+            m_capacity = 4;
             return;
-        }   
-        size_t new_iterator_count = (new_capacity + block_capacity - 1) / block_capacity;
-        MyVector<T*> new_map(new_iterator_count);
-
-        size_t current_iterator_count = (m_capacity + block_capacity - 1) / block_capacity;
-        for (size_t i = 0; i < current_iterator_count; ++i) {
+        }
+        size_t new_map_size = (new_capacity + block_capacity - 1) / block_capacity;
+        MyVector<T*> new_map(new_map_size);
+        size_t current_map_size = map.size();
+        for (size_t i = 0; i < current_map_size; ++i) {
             new_map[i] = map[i];
         }
         size_t start_index = static_cast<size_t>(start - map[0]);
+        size_t start_iterator_start_index = start_iterator.first - map[0];
         size_t finish_index = static_cast<size_t>(finish - map[0]);
+        size_t finish_iterator_start_index = end_iterator.first - map[0];
         start = new_map[0] + start_index;
         finish = new_map[0] + finish_index;
+        start_iterator = MyDequeIterator<T>(new_map[0] + start_iterator_start_index, new_map[0] + start_iterator_start_index + block_capacity, start, &new_map[0], block_capacity);
+        end_iterator = MyDequeIterator<T>(new_map[0] + finish_iterator_start_index, new_map[0] + finish_iterator_start_index + block_capacity, finish, &new_map[0], block_capacity);
         map = std::move(new_map);
         m_capacity = new_capacity;
-        iterator_count = new_iterator_count;
-        start_iterator = MyDequeIterator<T>(start, finish, start, &map[0], block_capacity);
-        end_iterator = MyDequeIterator<T>(start, finish, finish, &map[0], block_capacity);
     }
 
     void reallocate_left(size_t new_capacity) {
@@ -119,32 +123,34 @@ private:
             map[0] = new T[block_capacity];
             start = map[0];
             finish = map[0];
-            start_iterator = MyDequeIterator<T>(start, finish, start, &map[0], block_capacity);
-            end_iterator = MyDequeIterator<T>(start, finish, finish, &map[0], block_capacity);
+            start_iterator = MyDequeIterator<T>(map[0], map[0] + block_capacity, map[0], &map[0], block_capacity);
+            end_iterator = MyDequeIterator<T>(map[0], map[0] + block_capacity, map[0] + block_capacity, &map[0], block_capacity);
+            m_capacity = 4;
             return;
         }
-
-        size_t new_iterator_count = (new_capacity + block_capacity - 1) / block_capacity;
-        MyVector<T*> new_map(new_iterator_count);
-
-        size_t current_iterator_count = (m_capacity + block_capacity - 1) / block_capacity;
-        for (size_t i = 0; i < current_iterator_count; ++i) {
-            new_map[i + (new_iterator_count - current_iterator_count)] = map[i];
+        size_t new_map_size = (new_capacity + block_capacity - 1) / block_capacity;
+        MyVector<T*> new_map(new_map_size);
+        size_t current_map_size = map.size();
+        for (size_t i = 0; i < current_map_size; ++i) {
+            new_map[i + (new_map_size - current_map_size)] = map[i];
         }
 
-        for (size_t i = 0; i < current_iterator_count; ++i) {
-            delete[] map[i];
+        for (size_t i = 0; i < current_map_size; ++i) {
+            if (map[i] != nullptr) {
+                delete[] map[i];
+            }
         }
 
-        size_t start_index = static_cast<size_t>(start - map[0] + new_iterator_count - current_iterator_count);
-        size_t finish_index = static_cast<size_t>(finish - map[0] + new_iterator_count - current_iterator_count);
+        size_t start_index = static_cast<size_t>(start - map[0] + new_map_size - current_map_size);
+        size_t finish_index = static_cast<size_t>(finish - map[0] + new_map_size - current_map_size);
+        size_t start_iterator_start_index = start_iterator.first - map[0];
+        size_t finish_iterator_start_index = end_iterator.first - map[0];
         start = new_map[0] + start_index;
         finish = new_map[0] + finish_index;
+        start_iterator = MyDequeIterator<T>(new_map[0] + start_iterator_start_index, new_map[0] + start_iterator_start_index + block_capacity, start, &new_map[0], block_capacity);
+        end_iterator = MyDequeIterator<T>(new_map[0] + finish_iterator_start_index, new_map[0] + finish_iterator_start_index + block_capacity, finish, &new_map[0], block_capacity);
         map = std::move(new_map);
         m_capacity = new_capacity;
-        iterator_count = new_iterator_count;
-        start_iterator = MyDequeIterator<T>(start, finish, start, &map[0], block_capacity);
-        end_iterator = MyDequeIterator<T>(start, finish, finish, &map[0], block_capacity);
     }
     void reserve(size_t new_capacity) {
         if (new_capacity > m_capacity) {
@@ -153,7 +159,7 @@ private:
     }
 public:
 
-    MyDeque() : m_size(0), m_capacity(0), block_capacity(4), iterator_count(0),
+    MyDeque() : m_size(0), m_capacity(0), block_capacity(4),
         start(nullptr),
         finish(nullptr),
         start_iterator(nullptr, nullptr, nullptr, nullptr, block_capacity),
@@ -163,10 +169,10 @@ public:
         }
     ~MyDeque() override {
         // 释放 map 中的每个指针指向的内存
-        for (size_t i = 0; i < iterator_count; ++i) {
+        size_t current_map_size = map.size();
+        for (size_t i = 0; i < current_map_size; ++i) {
             if (map[i] != nullptr) {
                 delete[] map[i];
-                map[i] = nullptr;
             }
         }
         // 清空 map
@@ -175,30 +181,29 @@ public:
         // 重置所有相关成员变量
         m_size = 0;
         m_capacity = 0;
-        iterator_count = 0;
         start = nullptr;
         finish = nullptr;
     }
     MyDequeIterator<T> start_iterator;
     MyDequeIterator<T> end_iterator;
     void push_back(const T& value) {
-        if (m_size == m_capacity || finish == (map[iterator_count - 1] + block_capacity)) {
-            reallocate_right(m_capacity == 0 ? 1 : 2 * m_capacity);
+        if (m_size == m_capacity || finish == map[map.size() - 1] + block_capacity) {
+           reallocate_right(m_capacity == 0 ? 1 : 2 * m_capacity);
         }
         *finish = value;
         ++finish;
         ++m_size;
-        end_iterator = MyDequeIterator<T>(start, finish, finish, &map[iterator_count - 1], block_capacity);
+        ++end_iterator;
     }
 
     void push_front(const T& value) {
-        if (m_size == m_capacity || start == (map[0])) {
+        if (m_size == m_capacity || start == map[0]) {
             reallocate_left(m_capacity == 0 ? 1 : 2 * m_capacity);
         }
         --start;
         *start = value;
         ++m_size;
-        start_iterator = MyDequeIterator<T>(start, finish, start, &map[0], block_capacity);
+        --start_iterator;
     }
 
     void pop_back() {
@@ -207,7 +212,7 @@ public:
         }
         --finish;
         --m_size;
-        end_iterator = MyDequeIterator<T>(start, finish, finish, &map[iterator_count - 1], block_capacity);
+        --end_iterator;
     }
 
     void pop_front() {
@@ -216,7 +221,7 @@ public:
         }
         --m_size;
         ++start;
-        start_iterator = MyDequeIterator<T>(start, finish, start, &map[0], block_capacity);
+        ++start_iterator;
     }
 
     T& operator[](int index) {
@@ -256,18 +261,30 @@ public:
     }
 
     T& front() {
+        if (m_size == 0) {
+            throw std::out_of_range("Deque is empty");
+        }
         return *start;
     }
 
     const T& front() const {
+        if (m_size == 0) {
+            throw std::out_of_range("Deque is empty");
+        }
         return *start;
     }
 
     T& back() {
-        return *(finish - 1);
+        if (m_size == 0) {
+            throw std::out_of_range("Deque is empty");
+        }
+        return *(finish -1);
     }
 
     const T& back() const {
+        if (m_size == 0) {
+            throw std::out_of_range("Deque is empty");
+        }
         return *(finish - 1);
     }
 

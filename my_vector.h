@@ -31,7 +31,6 @@ public:
         m_data = new T[count];
         std::fill_n(m_data, count, value);
         for (size_t i = 0; i < count; ++i) {
-        std::cout << "m_data[" << i << "] = " << m_data[i] << std::endl;
         }
     }
 
@@ -148,10 +147,16 @@ public:
     }
 
     T& operator[](size_t index) {
+        if (index >= m_size) {
+            throw std::out_of_range("Index out of range");
+        }
         return m_data[index];
     }
 
     const T& operator[](size_t index) const {
+        if (index >= m_size) {
+            throw std::out_of_range("Index out of range");
+        }
         return m_data[index];
     }
 
