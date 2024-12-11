@@ -58,7 +58,7 @@ public:
         }
     };
     MyList() : head(new Node(T(), nullptr, nullptr)), tail(head), m_size(0) {}
-    ~MyList() override {
+    ~MyList() noexcept override {
         clear();
         if(head) {
             delete head;

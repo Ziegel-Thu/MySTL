@@ -44,7 +44,7 @@ public:
         other.m_size = other.m_capacity = 0;
     };
 
-    ~MyVector() override {
+    ~MyVector() noexcept override {
         delete[] m_data;
     }
 
@@ -60,12 +60,12 @@ public:
 
     MyVector& operator=(MyVector&& other) noexcept {
         if (this != &other) {
-            delete[] m_data;
             m_data = other.m_data;
             m_size = other.m_size;
             m_capacity = other.m_capacity;
             other.m_data = nullptr;
-            other.m_size = other.m_capacity = 0;
+            other.m_size = 0;
+            other.m_capacity = 0;
         }
         return *this;
     }

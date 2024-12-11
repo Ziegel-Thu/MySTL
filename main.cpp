@@ -32,7 +32,7 @@ void testList(MyList<int>& list) {
     std::cout << "\nTesting MyList:" << std::endl;
 
     // 测试 push_back 和 push_front
-    /*for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 5; ++i) {
         std::cout << i*100 << std::endl;
         list.push_back(i);
     }
@@ -66,7 +66,7 @@ void testList(MyList<int>& list) {
     list.clear();
     std::cout << "List size after clear: " << list.size() << std::endl;
     std::cout << "Is list empty after clear? " << (list.empty() ? "Yes" : "No") << std::endl;
-    */
+    
 }
 
 void testDeque(MyDeque<int>& deque) {
@@ -96,7 +96,7 @@ void testDeque(MyDeque<int>& deque) {
     }
     
     std::cout << "Deque size after pop_back: " << deque.size() << std::endl;
-    for (int i = 0; i < deque.size(); ++i) {
+    for (size_t i = 0; i < deque.size(); ++i) {
         std::cout << deque[i] << " ";
     }
     std::cout << std::endl;
@@ -117,7 +117,7 @@ void testDeque(MyDeque<int>& deque) {
         deque.push_back(i * i * i);
     }
         std::cout << "Deque size after push_back: " << deque.size() << std::endl;
-    for (int i = 0; i < deque.size(); i++) {
+    for (size_t i = 0; i < deque.size(); ++i) {
         std::cout << deque.at(i) << " ";
     }
     std::cout << std::endl;
@@ -147,7 +147,7 @@ int main() {
     testDeque(deque);
 
     // 测试 MyList
-    //testList(list);
+    testList(list);
 
     return 0;
 }
