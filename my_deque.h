@@ -64,7 +64,7 @@ private:
     void reallocate_right(size_t new_capacity) {
         if (m_capacity == 0) {
             map = MyVector<std::shared_ptr<T>>(1);
-            map[0] = std::shared_ptr<T>(new T[block_capacity]);
+            map[0] = std::shared_ptr<T>(new T[block_capacity],std::default_delete<T[]>());
             start = map[0].get();
             finish = map[0].get();
             start_iterator = MyDequeIterator<T>(map[0].get(), map[0].get() + block_capacity, map[0].get(), &map[0], block_capacity);
@@ -89,7 +89,7 @@ private:
     void reallocate_left(size_t new_capacity) {
         if (m_capacity == 0) {
             map = MyVector<std::shared_ptr<T>>(1);
-            map[0] = std::shared_ptr<T>(new T[block_capacity]);
+            map[0] = std::shared_ptr<T>(new T[block_capacity],std::default_delete<T[]>());
             start = map[0].get();
             finish = map[0].get();
             start_iterator = MyDequeIterator<T>(map[0].get(), map[0].get() + block_capacity, map[0].get(), &map[0], block_capacity);
@@ -122,11 +122,11 @@ public:
             
         }
     ~MyDeque() noexcept override {
-        map.clear();
         m_size = 0;
         m_capacity = 0;
         start = nullptr;
         finish = nullptr;
+        map.clear();
     }
     MyDequeIterator<T> start_iterator;
     MyDequeIterator<T> end_iterator;

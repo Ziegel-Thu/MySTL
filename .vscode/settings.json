@@ -99,6 +99,11 @@
     "typeinfo": "cpp",
     "variant": "cpp",
     "vector": "cpp",
-    "algorithm": "cpp"
+    "algorithm": "cpp",
+    "charconv": "cpp",
+    "__hash_table": "cpp",
+    "__node_handle": "cpp",
+    "optional": "cpp",
+    "unordered_map": "cpp"
   }
 }

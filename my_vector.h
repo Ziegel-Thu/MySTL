@@ -173,6 +173,20 @@ public:
         }
         return m_data[index];
     }
+    const T* begin() const {
+        return m_data;
+    }
+
+    const T* end() const {
+        return m_data + m_size;
+    }
+    T* begin() {
+        return m_data;
+    }
+
+    T* end() {
+        return m_data + m_size;
+    }
 };
 
 #endif // MY_VECTOR_H
